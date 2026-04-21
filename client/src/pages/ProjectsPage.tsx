@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../lib/axios";
-import { getSocket } from "../services/socket.service";
+import { Link } from "react-router-dom";
 
 interface Project {
   _id: string;
@@ -36,36 +36,7 @@ const ProjectsPage = () => {
     };
   }, []);
 
-  // 🔥 SOCKET LOGIC
-  useEffect(() => {
-    const socket = getSocket();
-
-    if (!socket) return;
-
-    // Join all project rooms
-    projects.forEach((project) => {
-      socket.emit("join:project", { projectId: project._id });
-    });
-
-    // Listen for task updates
-    socket.on("task:updated", (data) => {
-      console.log("Task updated:", data);
-    });
-
-    socket.on("task:created", (data) => {
-      console.log("Task created:", data);
-    });
-
-    socket.on("task:deleted", (data) => {
-      console.log("Task deleted:", data);
-    });
-
-    return () => {
-      socket.off("task:updated");
-      socket.off("task:created");
-      socket.off("task:deleted");
-    };
-  }, [projects]);
+ 
 
   if (loading) return <div>Loading projects...</div>;
 
@@ -78,12 +49,14 @@ const ProjectsPage = () => {
       ) : (
         <div className="space-y-3">
           {projects.map((project) => (
-            <div key={project._id} className="border p-3 rounded">
+            <Link
+              key={project._id}
+              to={`/projects/${project._id}`}
+              className="block border p-3 rounded hover:bg-gray-50"
+            >
               <h2 className="font-medium">{project.name}</h2>
-              <p className="text-sm text-gray-600">
-                {project.description}
-              </p>
-            </div>
+              <p className="text-sm text-gray-600">{project.description}</p>
+            </Link>
           ))}
         </div>
       )}
