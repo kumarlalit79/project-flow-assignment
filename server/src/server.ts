@@ -4,6 +4,9 @@ import { env } from "./config/env.ts";
 import { connectDB } from "./config/db.ts";
 import { initSocket } from "./sockets/socket.manager.ts";
 import { registerSocketHandlers } from "./sockets/socket.handlers.ts";
+import dns from "dns"
+
+dns.setServers(["1.1.1.1", "8.8.8.8"])
 
 const server = http.createServer(app);
 
