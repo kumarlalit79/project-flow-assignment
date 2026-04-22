@@ -1,5 +1,5 @@
 import type { Server, Socket } from "socket.io";
-import { SocketEvents } from "../types/index.ts";
+import { SocketEvents } from "../types/index.js";
 
 export const registerSocketHandlers = (io: Server, socket: Socket): void => {
   const user = socket.data.user;

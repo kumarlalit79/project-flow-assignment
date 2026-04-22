@@ -1,7 +1,7 @@
 import mongoose, { Schema, type Model } from "mongoose";
 import bcrypt from "bcryptjs";
-import type { IUser } from "../types/index.ts";
-import { UserRole } from "../types/index.ts";
+import type { IUser } from "../types/index.js";
+import { UserRole } from "../types/index.js";
 
 interface IUserDocument extends IUser {
   comparePassword(candidatePassword: string): Promise<boolean>;

@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-import type { UserRole } from "./index.ts";
+import type { UserRole } from "./index.js";
 
 declare global {
   namespace Express {

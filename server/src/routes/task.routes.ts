@@ -1,7 +1,7 @@
 import { Router } from "express";
-import * as taskController from "../controllers/task.controller.ts";
-import { protect } from "../middleware/auth.middleware.ts";
-import { validate } from "../middleware/validate.middleware.ts";
+import * as taskController from "../controllers/task.controller.js";
+import { protect } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validate.middleware.js";
 import { z } from "zod";
 
 const router = Router({ mergeParams: true }); 

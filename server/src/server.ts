@@ -1,9 +1,9 @@
 import http from "http";
-import { app } from "./app.ts";
-import { env } from "./config/env.ts";
-import { connectDB } from "./config/db.ts";
-import { initSocket } from "./sockets/socket.manager.ts";
-import { registerSocketHandlers } from "./sockets/socket.handlers.ts";
+import { app } from "./app.js";
+import { env } from "./config/env.js";
+import { connectDB } from "./config/db.js";
+import { initSocket } from "./sockets/socket.manager.js";
+import { registerSocketHandlers } from "./sockets/socket.handlers.js";
 import dns from "dns"
 import { config } from "dotenv";
 config();

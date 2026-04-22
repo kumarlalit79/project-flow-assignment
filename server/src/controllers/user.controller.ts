@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import * as userService from "../services/user.service.ts";
-import { UserRole } from "../types/index.ts";
+import * as userService from "../services/user.service.js";
+import { UserRole } from "../types/index.js";
 
 const asyncHandler =
   (

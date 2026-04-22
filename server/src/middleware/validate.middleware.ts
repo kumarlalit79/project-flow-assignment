@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { ZodObject, type ZodRawShape } from "zod";
-import { ApiResponse } from "../utils/api-response.utils.ts";
+import { ApiResponse } from "../utils/api-response.utils.js";
 
 export const validate =
   (schema: ZodObject<ZodRawShape>) =>

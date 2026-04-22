@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import * as projectService from "../services/project.service.ts";
+import * as projectService from "../services/project.service.js";
 
 const asyncHandler =
   (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>

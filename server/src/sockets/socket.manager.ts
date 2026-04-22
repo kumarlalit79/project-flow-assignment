@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import type { Server as HTTPServer } from "http";
-import { verifyToken } from "../utils/jwt.utils.ts";
-import type { AuthTokenPayload } from "../types/index.ts";
+import { verifyToken } from "../utils/jwt.utils.js";
+import type { AuthTokenPayload } from "../types/index.js";
 
 let io: Server;
 
@@ -14,7 +14,7 @@ export const initSocket = async (httpServer: HTTPServer): Promise<Server> => {
   });
   try {
     const { createAdapter } = await import("@socket.io/redis-adapter");
-    const { redisClient } = await import("../config/redis.ts");
+    const { redisClient } = await import("../config/redis.js");
 
     if (redisClient.status === "ready") {
       const subClient = redisClient.duplicate();

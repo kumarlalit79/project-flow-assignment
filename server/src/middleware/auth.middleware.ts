@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import { verifyToken } from "../utils/jwt.utils.ts";
-import { ApiResponse } from "../utils/api-response.utils.ts";
-import { UserRole } from "../types/index.ts";
+import { verifyToken } from "../utils/jwt.utils.js";
+import { ApiResponse } from "../utils/api-response.utils.js";
+import { UserRole } from "../types/index.js";
 
 export const protect = (
   req: Request,

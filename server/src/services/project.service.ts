@@ -1,8 +1,8 @@
-import { ProjectModel } from "../models/project.model.ts";
-import { ApiResponse } from "../utils/api-response.utils.ts";
-import type { IProject } from "../types/index.ts";
-import { ProjectMemberRole, SocketEvents } from "../types/index.ts";
-import { getIO } from "../sockets/socket.manager.ts";
+import { ProjectModel } from "../models/project.model.js";
+import { ApiResponse } from "../utils/api-response.utils.js";
+import type { IProject } from "../types/index.js";
+import { ProjectMemberRole, SocketEvents } from "../types/index.js";
+import { getIO } from "../sockets/socket.manager.js";
 
 export const createProject = async (data: {
   name: string;

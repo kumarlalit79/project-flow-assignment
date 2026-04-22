@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { ApiResponse } from "../utils/api-response.utils.ts";
+import { ApiResponse } from "../utils/api-response.utils.js";
 
 interface AppError extends Error {
   statusCode?: number;

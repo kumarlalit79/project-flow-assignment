@@ -1,6 +1,6 @@
 import mongoose, { Schema, type Model } from "mongoose";
-import type { ITask } from "../types/index.ts";
-import { TaskStatus, TaskPriority } from "../types/index.ts";
+import type { ITask } from "../types/index.js";
+import { TaskStatus, TaskPriority } from "../types/index.js";
 
 const taskSchema = new Schema<ITask>(
   {

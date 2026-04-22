@@ -1,6 +1,6 @@
 import jwt, { type SignOptions } from "jsonwebtoken";
-import { env } from "../config/env.ts";
-import type { AuthTokenPayload } from "../types/index.ts";
+import { env } from "../config/env.js";
+import type { AuthTokenPayload } from "../types/index.js";
 
 export const generateToken = (payload: AuthTokenPayload): string => {
   const options: SignOptions = {

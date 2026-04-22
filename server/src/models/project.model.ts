@@ -1,6 +1,6 @@
 import mongoose, { Schema, type Model } from "mongoose";
-import type { IProject, IProjectMember } from "../types/index.ts";
-import { ProjectMemberRole } from "../types/index.ts";
+import type { IProject, IProjectMember } from "../types/index.js";
+import { ProjectMemberRole } from "../types/index.js";
 
 const projectMemberSchema = new Schema<IProjectMember>(
   {

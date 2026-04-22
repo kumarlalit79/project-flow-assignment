@@ -1,9 +1,9 @@
-import { TaskModel } from "../models/task.model.ts";
-import { ProjectModel } from "../models/project.model.ts";
-import { ApiResponse } from "../utils/api-response.utils.ts";
-import type { ITask } from "../types/index.ts";
-import { getIO } from "../sockets/socket.manager.ts";
-import { SocketEvents } from "../types/index.ts";
+import { TaskModel } from "../models/task.model.js";
+import { ProjectModel } from "../models/project.model.js";
+import { ApiResponse } from "../utils/api-response.utils.js";
+import type { ITask } from "../types/index.js";
+import { getIO } from "../sockets/socket.manager.js";
+import { SocketEvents } from "../types/index.js";
 
 export const createTask = async (data: {
   title: string;

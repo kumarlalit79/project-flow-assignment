@@ -1,9 +1,9 @@
 import { Router } from "express";
-import * as projectController from "../controllers/project.controller.ts";
-import { protect, authorize } from "../middleware/auth.middleware.ts";
-import { validate } from "../middleware/validate.middleware.ts";
+import * as projectController from "../controllers/project.controller.js";
+import { protect, authorize } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validate.middleware.js";
 import { z } from "zod";
-import { UserRole } from "../types/index.ts";
+import { UserRole } from "../types/index.js";
 
 const router = Router();
 

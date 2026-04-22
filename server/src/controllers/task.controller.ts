@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import * as taskService from "../services/task.service.ts";
+import * as taskService from "../services/task.service.js";
 
 const asyncHandler =
   (

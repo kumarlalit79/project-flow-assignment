@@ -1,7 +1,7 @@
-import { UserModel } from "../models/user.model.ts";
-import { ApiResponse } from "../utils/api-response.utils.ts";
-import type { IUser } from "../types/index.ts";
-import { UserRole } from "../types/index.ts";
+import { UserModel } from "../models/user.model.js";
+import { ApiResponse } from "../utils/api-response.utils.js";
+import type { IUser } from "../types/index.js";
+import { UserRole } from "../types/index.js";
 
 export const getAllUsers = async (): Promise<ApiResponse<IUser[]>> => {
   const users = await UserModel.find().select("-password");
