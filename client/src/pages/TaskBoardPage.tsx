@@ -9,7 +9,7 @@ import { getSocket } from "../services/socket.service";
 import { toast } from "sonner";
 import {
   ArrowLeft, Plus, Users, Calendar, Pencil, Trash2,
-  Loader2, Wifi, CheckCircle2, Clock, Circle,
+  Wifi, CheckCircle2, Clock, Circle,
 } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import LoadingSpinner from "../components/common/LoadingSpinner";
