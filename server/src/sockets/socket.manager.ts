@@ -12,20 +12,16 @@ export const initSocket = async (httpServer: HTTPServer): Promise<Server> => {
       methods: ["GET", "POST"],
     },
   });
-
-  // Try to attach Redis adapter — but fall back gracefully if Redis is down
   try {
     const { createAdapter } = await import("@socket.io/redis-adapter");
     const { redisClient } = await import("../config/redis.ts");
 
-    // Only use Redis adapter if it's actually connected
     if (redisClient.status === "ready") {
       const subClient = redisClient.duplicate();
       await subClient.connect().catch(() => {});
       io.adapter(createAdapter(redisClient, subClient));
       console.log("Socket.IO: Redis adapter attached");
     } else {
-      // Wait up to 2 s for Redis to connect, then give up
       await new Promise<void>((resolve) => {
         const timeout = setTimeout(resolve, 2000);
         redisClient.once("ready", async () => {
