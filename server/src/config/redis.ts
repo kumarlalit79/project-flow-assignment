@@ -1,11 +1,11 @@
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 import { env } from "./env.js";
 
 // Upstash requires TLS — ioredis uses rediss:// protocol
 export const redisClient = new Redis(env.REDIS_URL, {
   maxRetriesPerRequest: 3,
   tls: env.REDIS_URL.startsWith("rediss://") ? {} : undefined,
-  retryStrategy(times) {
+  retryStrategy(times: number): number | null {
     if (times > 3) {
       console.error("Redis connection failed after 3 retries");
       return null;
@@ -20,7 +20,7 @@ redisClient.on("connect", () => {
   console.log("Redis connected");
 });
 
-redisClient.on("error", (error) => {
+redisClient.on("error", (error: Error) => {
   console.error("Redis error:", error);
 });
 
