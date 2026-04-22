@@ -60,4 +60,42 @@ router.delete(
   projectController.deleteProject
 );
 
+// ─── Member Management ──────────────────────────────────────────────────────
+
+const addMemberSchema = z.object({
+  body: z.object({
+    userId: z.string().min(1, "User ID is required"),
+    role: z.enum(["manager", "member"]).optional(),
+  }),
+  params: z.object({
+    id: z.string().min(1, "Project ID is required"),
+  }),
+  query: z.object({}),
+});
+
+const removeMemberSchema = z.object({
+  body: z.object({}),
+  params: z.object({
+    id: z.string().min(1, "Project ID is required"),
+    userId: z.string().min(1, "User ID is required"),
+  }),
+  query: z.object({}),
+});
+
+// Admin or project Manager can add members
+router.post(
+  "/:id/members",
+  protect,
+  validate(addMemberSchema),
+  projectController.addMember,
+);
+
+// Admin or project Manager can remove members
+router.delete(
+  "/:id/members/:userId",
+  protect,
+  validate(removeMemberSchema),
+  projectController.removeMember,
+);
+
 export default router;

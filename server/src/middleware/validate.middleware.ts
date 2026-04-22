@@ -1,12 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import { ZodObject, type ZodRawShape } from "zod";
-import { ApiResponse } from "../utils/api-response.utils";
+import { ApiResponse } from "../utils/api-response.utils.ts";
 
 export const validate =
   (schema: ZodObject<ZodRawShape>) =>
   (req: Request, res: Response, next: NextFunction): void => {
     const result = schema.safeParse({
-      body: req.body,
+      body: req.body ?? {},
       params: req.params,
       query: req.query,
     });
@@ -19,8 +19,8 @@ export const validate =
     }
 
     req.body = result.data.body as typeof req.body;
-    req.params = result.data.params as typeof req.params;
-    req.query = result.data.query as typeof req.query;
+    // req.params and req.query are readonly in Express — they're already
+    // correctly parsed by the router. Zod validated their shape above.
     
     next();
   };

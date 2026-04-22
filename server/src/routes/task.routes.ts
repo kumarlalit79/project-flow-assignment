@@ -6,11 +6,24 @@ import { z } from "zod";
 
 const router = Router({ mergeParams: true }); 
 
+const optionalAssigneeSchema = z.preprocess(
+  (value) => (value === "" || value === null ? undefined : value),
+  z.string().optional(),
+);
+
+const optionalDueDateSchema = z.preprocess(
+  (value) => (value === "" || value === null ? undefined : value),
+  z.string().optional(),
+);
 
 const createTaskSchema = z.object({
   body: z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
+    priority: z.enum(["low", "medium", "high"]).default("medium"),
+    assignee: optionalAssigneeSchema,
+    dueDate: optionalDueDateSchema,
+    status: z.enum(["todo", "inProgress", "done"]).default("todo"),
   }),
   params: z.object({
     projectId: z.string().min(1, "Project ID is required"),
@@ -23,8 +36,8 @@ const updateTaskSchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]).optional(),
-    assignee: z.string().optional(),
-    dueDate: z.string().optional(),
+    assignee: optionalAssigneeSchema,
+    dueDate: optionalDueDateSchema,
   }),
   params: z.object({
     projectId: z.string(),

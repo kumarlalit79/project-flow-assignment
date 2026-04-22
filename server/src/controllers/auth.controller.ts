@@ -8,6 +8,7 @@ const asyncHandler =
   };
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
+  console.log("Register hit with body:", req.body);
   const response = await authService.registerUser(req.body);
 
   res.status(201).json(response);

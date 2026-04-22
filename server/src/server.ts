@@ -5,20 +5,22 @@ import { connectDB } from "./config/db.ts";
 import { initSocket } from "./sockets/socket.manager.ts";
 import { registerSocketHandlers } from "./sockets/socket.handlers.ts";
 import dns from "dns"
+import { config } from "dotenv";
+config();
+
 
 dns.setServers(["1.1.1.1", "8.8.8.8"])
 
 const server = http.createServer(app);
 
-const io = initSocket(server);
-
-io.on("connection", (socket) => {
-  registerSocketHandlers(io, socket);
-});
-
 const startServer = async (): Promise<void> => {
   try {
     await connectDB();
+
+    const io = await initSocket(server);
+    io.on("connection", (socket) => {
+      registerSocketHandlers(io, socket);
+    });
 
     server.listen(env.PORT, () => {
       console.log(`Server running on port ${env.PORT}`);

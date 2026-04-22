@@ -57,3 +57,29 @@ export const deleteProject = asyncHandler(
     res.status(200).json(response);
   },
 );
+
+export const addMember = asyncHandler(
+  async (req: Request, res: Response) => {
+    const projectId = req.params.id as string;
+    const { userId, role } = req.body as { userId: string; role?: string };
+
+    const response = await projectService.addMember(
+      projectId,
+      userId,
+      role as import("../types/index.ts").ProjectMemberRole | undefined,
+    );
+
+    res.status(200).json(response);
+  },
+);
+
+export const removeMember = asyncHandler(
+  async (req: Request, res: Response) => {
+    const projectId = req.params.id as string;
+    const userId = req.params.userId as string;
+
+    const response = await projectService.removeMember(projectId, userId);
+
+    res.status(200).json(response);
+  },
+);

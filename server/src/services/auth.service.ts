@@ -2,6 +2,7 @@ import { UserModel } from "../models/user.model.ts";
 import { generateToken } from "../utils/jwt.utils.ts";
 import { ApiResponse } from "../utils/api-response.utils.ts";
 import type { IUser } from "../types/index.ts";
+import { UserRole } from "../types/index.ts";
 
 export const registerUser = async (data: {
   name: string;
@@ -17,10 +18,14 @@ export const registerUser = async (data: {
     });
   }
 
+  const userCount = await UserModel.countDocuments();
+  const role = userCount === 0 ? UserRole.ADMIN : UserRole.MEMBER;
+
   const user = await UserModel.create({
     name,
     email,
     password,
+    role,
   });
 
   const token = generateToken({
@@ -28,9 +33,9 @@ export const registerUser = async (data: {
     role: user.role,
   });
 
+  const { password: _pwd, ...safeUser } = user.toObject();
   return ApiResponse.success("User registered successfully", {
-    ...user.toObject(),
-    password: undefined,
+    ...safeUser,
     token,
   } as unknown as IUser);
 };
@@ -60,9 +65,9 @@ export const loginUser = async (data: {
     role: user.role,
   });
 
+  const { password: _pwd2, ...safeLoginUser } = user.toObject();
   return ApiResponse.success("Login successful", {
-    ...user.toObject(),
-    password: undefined,
+    ...safeLoginUser,
     token,
   } as unknown as IUser);
 };

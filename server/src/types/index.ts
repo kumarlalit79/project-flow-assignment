@@ -68,6 +68,7 @@ export enum SocketEvents {
   TASK_UPDATED = "task:updated",
   TASK_DELETED = "task:deleted",
   MEMBER_ADDED = "member:added",
+  PROJECT_DELETED = "project:deleted",
 }
 
 export interface PaginationQuery {

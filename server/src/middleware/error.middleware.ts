@@ -11,11 +11,14 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ): void => {
+  // DEBUG: print full error to server terminal
+  console.error("❌ Error caught by errorHandler:", err);
+
   const statusCode = err.statusCode || 500;
 
   const message =
     statusCode === 500
-      ? "Internal Server Error"
+      ? process.env.NODE_ENV === "development" ? err.message : "Internal Server Error"
       : err.message || "Something went wrong";
 
   res.status(statusCode).json(

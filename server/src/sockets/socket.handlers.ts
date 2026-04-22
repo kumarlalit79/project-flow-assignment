@@ -4,6 +4,8 @@ import { SocketEvents } from "../types/index.ts";
 export const registerSocketHandlers = (io: Server, socket: Socket): void => {
   const user = socket.data.user;
 
+  socket.join(`user:${user.userId}`);
+
   socket.on(SocketEvents.JOIN_PROJECT, ({ projectId }) => {
     socket.join(`project:${projectId}`);
   });

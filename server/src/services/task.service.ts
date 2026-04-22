@@ -10,8 +10,12 @@ export const createTask = async (data: {
   description: string;
   projectId: string;
   createdBy: string;
+  priority?: ITask["priority"];
+  assignee?: string;
+  dueDate?: string;
+  status?: ITask["status"];
 }): Promise<ApiResponse<ITask>> => {
-  const { title, description, projectId, createdBy } = data;
+  const { title, description, projectId, createdBy, priority, assignee, dueDate, status } = data;
 
   const project = await ProjectModel.findById(projectId);
   if (!project) {
@@ -20,12 +24,26 @@ export const createTask = async (data: {
     });
   }
 
-  const task = await TaskModel.create({
+  const createdTask = await TaskModel.create({
     title,
     description,
+    priority,
+    assignee: assignee || null,
+    dueDate: dueDate || null,
+    status,
     project: projectId,
     createdBy,
   });
+
+  const task = await TaskModel.findById(createdTask._id)
+    .populate("assignee", "_id name email");
+
+  if (!task) {
+    throw Object.assign(new Error("Task not found after creation"), {
+      statusCode: 500,
+    });
+  }
+
   const io = getIO();
   io.to(`project:${projectId}`).emit(SocketEvents.TASK_CREATED, {
     task: task.toObject(),
@@ -37,7 +55,8 @@ export const createTask = async (data: {
 export const getTasks = async (
   projectId: string,
 ): Promise<ApiResponse<ITask[]>> => {
-  const tasks = await TaskModel.find({ project: projectId });
+  const tasks = await TaskModel.find({ project: projectId })
+    .populate("assignee", "_id name email");
 
   return ApiResponse.success(
     "Tasks fetched successfully",
@@ -49,9 +68,8 @@ export const updateTask = async (
   taskId: string,
   data: Partial<ITask>,
 ): Promise<ApiResponse<ITask>> => {
-  const task = await TaskModel.findByIdAndUpdate(taskId, data, {
-    new: true,
-  });
+  const task = await TaskModel.findByIdAndUpdate(taskId, data, { new: true })
+    .populate("assignee", "_id name email");
 
   if (!task) {
     throw Object.assign(new Error("Task not found"), {
@@ -59,7 +77,6 @@ export const updateTask = async (
     });
   }
   const io = getIO();
-
   io.to(`project:${task.project.toString()}`).emit(SocketEvents.TASK_UPDATED, {
     task: task.toObject(),
   });
@@ -75,7 +92,7 @@ export const updateTaskStatus = async (
     taskId,
     { status },
     { new: true },
-  );
+  ).populate("assignee", "_id name email");
 
   if (!task) {
     throw Object.assign(new Error("Task not found"), {
@@ -84,7 +101,6 @@ export const updateTaskStatus = async (
   }
 
   const io = getIO();
-
   io.to(`project:${task.project.toString()}`).emit(SocketEvents.TASK_UPDATED, {
     task: task.toObject(),
   });

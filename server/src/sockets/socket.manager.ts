@@ -1,40 +1,63 @@
 import { Server } from "socket.io";
 import type { Server as HTTPServer } from "http";
-import { createAdapter } from "@socket.io/redis-adapter";
-import { redisClient } from "../config/redis.ts";
 import { verifyToken } from "../utils/jwt.utils.ts";
 import type { AuthTokenPayload } from "../types/index.ts";
 
 let io: Server;
 
-export const initSocket = (httpServer: HTTPServer): Server => {
+export const initSocket = async (httpServer: HTTPServer): Promise<Server> => {
   io = new Server(httpServer, {
     cors: {
-      origin: "*", 
+      origin: "*",
       methods: ["GET", "POST"],
     },
   });
 
-  
-  const pubClient = redisClient;
-  const subClient = redisClient.duplicate();
+  // Try to attach Redis adapter — but fall back gracefully if Redis is down
+  try {
+    const { createAdapter } = await import("@socket.io/redis-adapter");
+    const { redisClient } = await import("../config/redis.ts");
 
-  io.adapter(createAdapter(pubClient, subClient));
+    // Only use Redis adapter if it's actually connected
+    if (redisClient.status === "ready") {
+      const subClient = redisClient.duplicate();
+      await subClient.connect().catch(() => {});
+      io.adapter(createAdapter(redisClient, subClient));
+      console.log("Socket.IO: Redis adapter attached");
+    } else {
+      // Wait up to 2 s for Redis to connect, then give up
+      await new Promise<void>((resolve) => {
+        const timeout = setTimeout(resolve, 2000);
+        redisClient.once("ready", async () => {
+          clearTimeout(timeout);
+          try {
+            const subClient = redisClient.duplicate();
+            await subClient.connect().catch(() => {});
+            io.adapter(createAdapter(redisClient, subClient));
+            console.log("Socket.IO: Redis adapter attached");
+          } catch {
+            console.warn("Socket.IO: Could not attach Redis adapter, using in-memory");
+          }
+          resolve();
+        });
+        redisClient.once("error", () => {
+          clearTimeout(timeout);
+          resolve();
+        });
+      });
+    }
+  } catch {
+    console.warn("Socket.IO: Redis adapter unavailable, using in-memory (single-instance) mode");
+  }
 
-  
   io.use((socket, next) => {
     try {
       const token = socket.handshake.auth?.token;
-
       if (!token) {
         return next(new Error("Unauthorized: No token"));
       }
-
       const decoded = verifyToken(token) as AuthTokenPayload;
-
-      
       socket.data.user = decoded;
-
       next();
     } catch {
       next(new Error("Unauthorized: Invalid token"));
